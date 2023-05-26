@@ -1,0 +1,26 @@
+version: '3.6'
+
+services:
+  db:
+    image: postgres:14
+    restart: always
+    # command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
+    volumes:
+      - ../../../.docker/postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 123123
+    ports:
+      - "5432:5432"
+  django:
+    restart: always
+    build: .
+    # if need to makemigration --merge, run with: python manage.py makemigrations --merge --noinput && ...
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:3001"
+    volumes:
+      - .:/code
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    depends_on:
+      - db
