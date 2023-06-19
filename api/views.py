@@ -34,10 +34,6 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 class GetMe(APIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
-
-    # def get(self, request, *kwargs) -> HttpResponse:
-    #     return HttpResponse(request.user)
-
     def get(self, request) -> JsonResponse:
         serializer = UserSerializer(request.user)
         return JsonResponse(serializer.data, status=200)
