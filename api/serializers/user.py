@@ -9,4 +9,4 @@ class UserSerializer(serializers.ModelSerializer):
     password_updated_at = serializers.CharField(read_only=True)
     class Meta:
         model = User
-        fields = ['email', 'is_email_verified', 'password', 'created_at', 'updated_at', 'password_updated_at']
+        fields = ['id', 'email', 'is_email_verified', 'password', 'created_at', 'updated_at', 'password_updated_at']

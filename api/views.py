@@ -1,5 +1,12 @@
-from rest_framework import generics
+import logging
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse, JsonResponse
+from django.views import View
+from rest_framework import generics, permissions
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.models import Company, User
@@ -23,6 +30,18 @@ class UserList(generics.ListCreateAPIView):
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class GetMe(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+
+    # def get(self, request, *kwargs) -> HttpResponse:
+    #     return HttpResponse(request.user)
+
+    def get(self, request) -> JsonResponse:
+        serializer = UserSerializer(request.user)
+        return JsonResponse(serializer.data, status=200)
+
 
 class Login(TokenObtainPairView):
     permission_classes = (AllowAny,)
